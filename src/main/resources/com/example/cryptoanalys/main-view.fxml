@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="580.0" prefWidth="500.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cryptoanalys.MainController">
+  <padding>
+    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+  </padding>
+   <TitledPane animated="false" collapsible="false" prefHeight="95.0" prefWidth="808.0" text="Alphabet language">
+     <content>
+       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="50.0" prefWidth="806.0">
+            <children>
+               <RadioButton fx:id="radioLangEn" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="English" />
+               <RadioButton fx:id="radioLangUa" layoutX="14.0" layoutY="35.0" mnemonicParsing="false" text="Ukrainian" />
+            </children>
+         </AnchorPane>
+     </content>
+   </TitledPane>
+   <TitledPane animated="false" collapsible="false" prefHeight="120.0" prefWidth="460.0" text="Select mode">
+     <content>
+       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="103.0" prefWidth="458.0">
+            <children>
+               <RadioButton fx:id="modeEncrypt" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Encrypt" />
+               <RadioButton fx:id="modeDecrypt" layoutX="14.0" layoutY="42.0" mnemonicParsing="false" text="Decrypt" />
+               <RadioButton fx:id="modeBruteForce" layoutX="14.0" layoutY="66.0" mnemonicParsing="false" text="Brute force" />
+            </children>
+         </AnchorPane>
+     </content>
+   </TitledPane>
+   <HBox alignment="CENTER_LEFT">
+      <children>
+         <Spinner fx:id="spinnerKey" />
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="39.0" text="Key" />
+      </children>
+   </HBox>
+   <HBox prefHeight="30.0" prefWidth="460.0">
+      <children>
+        <Button onAction="#onSelectFileButtonClick" prefHeight="25.0" prefWidth="150.0" text="Select file..." />
+         <Label prefHeight="17.0" prefWidth="75.0" text=" Current file:" textAlignment="RIGHT" />
+         <Label prefHeight="17.0" prefWidth="235.0" fx:id="labelInfoFile" text="no selected"/>
+      </children>
+   </HBox>
+   <Button fx:id="btnExecute" disable="true" mnemonicParsing="false" onAction="#onExecuteButtonClick" prefHeight="25.0" prefWidth="151.0" text="Execute" />
+   <TextArea fx:id="txtAreaLog" editable="false" prefHeight="165.0" prefWidth="808.0" />
+</VBox>
