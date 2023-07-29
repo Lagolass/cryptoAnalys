@@ -90,11 +90,10 @@ public class MainController implements Initializable {
 
         selectMode.selectedToggleProperty().addListener((observable, oldVal, newVal) -> {
             this.currentMode = OPERATION_MODE.valueOf(newVal.getUserData().toString());
-            spinnerKey.setDisable(false);
-            switch (this.currentMode) {
-                case ENCRYPT -> encryptionCesar.modeEncrypt();
-                case DECRYPT -> encryptionCesar.modeDecrypt();
-                case BRUTE_FORCE -> spinnerKey.setDisable(true);
+            if (this.currentMode == OPERATION_MODE.BRUTE_FORCE) {
+                spinnerKey.setDisable(true);
+            } else {
+                spinnerKey.setDisable(false);
             }
         });
 
@@ -133,7 +132,7 @@ public class MainController implements Initializable {
                 String data = reader.readLine();
                 if (data.length() > 0) {
                     if (currentMode != OPERATION_MODE.BRUTE_FORCE) {
-                        String newData = encryptionCesar.getResult(data);
+                        String newData = encryptionCesar.encrypt(data);
                         writer.write(newData);
                     }
                 }
