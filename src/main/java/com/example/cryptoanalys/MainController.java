@@ -9,13 +9,9 @@ import javafx.stage.FileChooser;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.CharBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -46,6 +42,7 @@ public class MainController implements Initializable {
     private File cacheDirectory;
 
     private EncryptionCesar encryptionCesar = EncryptionCesar.getInstance();
+    private AnalyseDecryption analyseDecryption = AnalyseDecryption.getInstance();
 
     private enum OPERATION_MODE {
         ENCRYPT,
@@ -75,6 +72,7 @@ public class MainController implements Initializable {
 
         groupLangAlpha.selectedToggleProperty().addListener((observable, oldVal, newVal) -> {
             encryptionCesar.switchAlphabet(newVal.getUserData().toString());
+            analyseDecryption.switchLangList(newVal.getUserData().toString());
         });
 
         ToggleGroup selectMode = new ToggleGroup();
@@ -125,21 +123,69 @@ public class MainController implements Initializable {
     @FXML
     protected void onExecuteButtonClick() throws IOException {
 
+        if (currentMode != OPERATION_MODE.BRUTE_FORCE) {
+            doEncryption();
+        } else {
+            doBruteForce();
+        }
+
+        addLog("Finished!");
+    }
+
+    protected void doEncryption() throws IOException {
+
         try (FileReader fileReader = new FileReader(currentFile);
              BufferedReader reader = new BufferedReader(fileReader);
              FileWriter writer = new FileWriter(createFile())) {
             while (reader.ready()) {
                 String data = reader.readLine();
                 if (data.length() > 0) {
-                    if (currentMode != OPERATION_MODE.BRUTE_FORCE) {
-                        String newData = encryptionCesar.encrypt(data);
-                        writer.write(newData);
-                    }
+                    String newData = encryptionCesar.encrypt(data);
+                    writer.write(newData);
+                }
+            }
+        }
+    }
+
+    protected void doBruteForce() throws IOException {
+
+        try (FileReader fileReader = new FileReader(currentFile);
+             BufferedReader reader = new BufferedReader(fileReader)) {
+            StringBuilder stringForBruteForce = new StringBuilder();
+            while (reader.ready()) {
+                String data = reader.readLine();
+                if (data.length() > 0) {
+                    stringForBruteForce.append(data).append(" ");
                 }
             }
 
-            addLog("Finished!");
+            if(stringForBruteForce.length() > 0) {
+                addLog("Executing BruteForce...");
+                btnExecute.setDisable(true);
+                runBruteForce(stringForBruteForce.toString());
+                btnExecute.setDisable(false);
+            }
         }
+    }
+
+    protected void runBruteForce(String data) {
+        int maxRange = encryptionCesar.sizeAlphabet();
+        int minRange = maxRange * -1;
+        for (int i = minRange; i < maxRange; i++) {
+            encryptionCesar.setKey(i);
+            String newData = encryptionCesar.encrypt(data);
+
+            analyseDecryption.analyse(newData, i);
+        }
+
+        if(analyseDecryption.keyWasFind()) {
+            addLog("Decryption key value found: " + analyseDecryption.getKey());
+
+            spinnerKey.getValueFactory().setValue(analyseDecryption.getKey());
+        } else {
+            addLog("Decryption key value not found!");
+        }
+
     }
 
     protected String createFile () throws IOException {
