@@ -25,6 +25,10 @@ public class EncryptionCesar {
         this.currentAlpha = (Objects.equals(alpha, "en")) ? ALPHABET_ENGLISH : ALPHABET_UKRAINIAN;
     }
 
+    public int sizeAlphabet() {
+        return currentAlpha.size();
+    }
+
     public String encrypt(String data) {
         StringBuilder newStr = new StringBuilder("");
         for (char c : data.toCharArray()) {

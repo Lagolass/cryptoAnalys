@@ -57,7 +57,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        int aLen = EncryptionCesar.ALPHABET_ENGLISH.size();
+        int aLen = encryptionCesar.sizeAlphabet();
         spinnerKey.setValueFactory(
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(aLen * -1, aLen)
         );
